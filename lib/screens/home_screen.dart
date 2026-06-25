@@ -4,27 +4,37 @@ import '../constants/colors.dart';
 import '../constants/strings.dart';
 import '../database/database_helper.dart';
 import '../database/queries.dart' as queries;
+import '../providers/home_data_provider.dart';
 import '../providers/settings_provider.dart';
 import '../services/study_service.dart';
 import '../widgets/header.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
-  const HomeScreen({super.key});
+  final VoidCallback? onStatsTap;
+  const HomeScreen({super.key, this.onStatsTap});
 
   @override
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
-  int newCount = 0;
-  int reviewCount = 0;
-  int streak = 0;
-  int todayNew = 0;
-  int todayReview = 0;
+  late int newCount;
+  late int reviewCount;
+  late int streak;
+  late int todayNew;
+  late int todayReview;
 
   @override
   void initState() {
     super.initState();
+    // Use pre-loaded data from main.dart (available immediately)
+    final seed = ref.read(homeDataSeedProvider);
+    newCount = seed?.newCount ?? 0;
+    reviewCount = seed?.reviewCount ?? 0;
+    streak = seed?.streak ?? 0;
+    todayNew = seed?.todayNew ?? 0;
+    todayReview = seed?.todayReview ?? 0;
+    // Refresh in background for latest data
     _loadData();
   }
 
@@ -38,6 +48,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final currentStreak = await checkIn(db);
     final today = DateTime.now().toIso8601String().split('T')[0];
     final todayLog = await queries.getTodayStudyLog(db, today);
+
+    debugPrint('=== HOME _loadData: newWordsPerDay=${settings.newWordsPerDay}, newCount=${queue.newWords.length}, reviewCount=${queue.reviewWords.length} ===');
 
     if (mounted) {
       setState(() {
@@ -55,10 +67,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: const Text(AppStrings.hint),
-          content: const Text(AppStrings.noWordsToday),
+          title: Text(AppStrings.hint),
+          content: Text(AppStrings.noWordsToday),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('确定')),
+            TextButton(onPressed: () => Navigator.pop(ctx), child: Text('确定')),
           ],
         ),
       );
@@ -84,7 +96,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   decoration: BoxDecoration(
                     color: AppColors.streakBg,
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: const Color(0x33C1C7D2)),
+                    border: Border.all(color: AppColors.cardBorderStrong),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -94,25 +106,25 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           Container(
                             width: 44,
                             height: 44,
-                            decoration: const BoxDecoration(
-                              color: Color(0xFFEBDFBA),
+                            decoration: BoxDecoration(
+                              color: AppColors.streakIconBg,
                               shape: BoxShape.circle,
                             ),
-                            child: const Icon(Icons.local_fire_department,
+                            child: Icon(Icons.local_fire_department,
                                 color: AppColors.streakText, size: 26),
                           ),
-                          const SizedBox(width: 12),
+                          SizedBox(width: 12),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(AppStrings.streakLabel,
+                              Text(AppStrings.streakLabel,
                                   style: TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w500,
-                                      color: Color(0xFF4E472B),
+                                      color: AppColors.streakLabelText,
                                       letterSpacing: 0.05)),
                               Text('$streak天',
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                       fontSize: 24,
                                       fontWeight: FontWeight.w700,
                                       color: AppColors.streakText,
@@ -127,15 +139,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(
-                              color: const Color(0x4DD97706), width: 2),
+                              color: AppColors.streakText.withValues(alpha: 0.3), width: 2),
                         ),
-                        child: const Icon(Icons.flag,
+                        child: Icon(Icons.flag,
                             color: AppColors.streakText, size: 18),
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
 
                 // Stats Card
                 Container(
@@ -143,7 +155,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   decoration: BoxDecoration(
                     color: AppColors.surfaceLowest,
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: const Color(0x1AC1C7D2)),
+                    border: Border.all(color: AppColors.cardBorder),
                     boxShadow: [
                       BoxShadow(
                           color: AppColors.primary.withValues(alpha: 0.04),
@@ -156,15 +168,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       Expanded(
                         child: Column(
                           children: [
-                            const Text(AppStrings.newWords,
+                            Text(AppStrings.newWords,
                                 style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w500,
                                     color: AppColors.onSurfaceVariant,
                                     letterSpacing: 0.05)),
-                            const SizedBox(height: 4),
+                            SizedBox(height: 4),
                             Text('$todayNew',
-                                style: const TextStyle(
+                                style: TextStyle(
                                     fontSize: 36,
                                     fontWeight: FontWeight.w700,
                                     color: AppColors.primary,
@@ -176,19 +188,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       Container(
                           width: 1,
                           height: 48,
-                          color: const Color(0x33C1C7D2)),
+                          color: AppColors.cardBorderStrong),
                       Expanded(
                         child: Column(
                           children: [
-                            const Text(AppStrings.review,
+                            Text(AppStrings.review,
                                 style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w500,
                                     color: AppColors.onSurfaceVariant,
                                     letterSpacing: 0.05)),
-                            const SizedBox(height: 4),
+                            SizedBox(height: 4),
                             Text('$todayReview',
-                                style: const TextStyle(
+                                style: TextStyle(
                                     fontSize: 36,
                                     fontWeight: FontWeight.w700,
                                     color: AppColors.primary,
@@ -200,7 +212,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
 
                 // Queue Card
                 Container(
@@ -208,7 +220,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   decoration: BoxDecoration(
                     color: AppColors.surfaceLowest,
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: const Color(0x1AC1C7D2)),
+                    border: Border.all(color: AppColors.cardBorder),
                     boxShadow: [
                       BoxShadow(
                           color: AppColors.primary.withValues(alpha: 0.04),
@@ -220,25 +232,25 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     children: [
                       _buildQueueRow(
                         icon: Icons.menu_book,
-                        iconBg: const Color(0x262B78BF),
+                        iconBg: AppColors.queueIconBg,
                         title: '${AppStrings.newWordQueue} $newCount 个',
-                        count: '0/$newCount',
-                        progress: 0,
+                        count: '$todayNew/$newCount',
+                        progress: newCount > 0 ? todayNew / newCount : 0,
                         color: AppColors.primary,
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: 16),
                       _buildQueueRow(
                         icon: Icons.history,
-                        iconBg: const Color(0xFFE6F4F9),
+                        iconBg: AppColors.queueIconBgAlt,
                         title: '${AppStrings.reviewQueue} $reviewCount 个',
-                        count: '0/$reviewCount',
-                        progress: 0,
+                        count: '$todayReview/$reviewCount',
+                        progress: reviewCount > 0 ? todayReview / reviewCount : 0,
                         color: AppColors.tertiary,
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
 
                 // Start Button
                 SizedBox(
@@ -252,14 +264,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       elevation: 4,
                       shadowColor: AppColors.ctaButton.withValues(alpha: 0.2),
                     ),
-                    child: const Text(AppStrings.startStudy,
+                    child: Text(AppStrings.startStudy,
                         style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w600,
-                            color: Colors.white)),
+                            color: AppColors.onPrimary)),
                   ),
                 ),
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
 
                 // Bottom Grid
                 Row(
@@ -271,13 +283,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         onTap: () => Navigator.pushNamed(context, '/book'),
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    SizedBox(width: 12),
                     Expanded(
                       child: _buildGridItem(
                         icon: Icons.bar_chart,
                         label: AppStrings.stats,
-                        iconBg: const Color(0xFFE6F4F9),
-                        onTap: () {},
+                        iconBg: AppColors.queueIconBgAlt,
+                        onTap: widget.onStatsTap ?? () {},
                       ),
                     ),
                   ],
@@ -309,7 +321,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ),
           child: Icon(icon, color: color, size: 20),
         ),
-        const SizedBox(width: 12),
+        SizedBox(width: 12),
         Expanded(
           child: Column(
             children: [
@@ -317,18 +329,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(title,
-                      style: const TextStyle(
+                      style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w400,
                           color: AppColors.onSurface)),
                   Text(count,
-                      style: const TextStyle(
+                      style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
                           color: AppColors.onSurfaceVariant)),
                 ],
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               ClipRRect(
                 borderRadius: BorderRadius.circular(3),
                 child: LinearProgressIndicator(
@@ -348,7 +360,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget _buildGridItem({
     required IconData icon,
     required String label,
-    Color iconBg = const Color(0x262B78BF),
+    Color? iconBg,
     required VoidCallback onTap,
   }) {
     return GestureDetector(
@@ -358,10 +370,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         decoration: BoxDecoration(
           color: AppColors.surfaceLowest,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: const Color(0x1AC1C7D2)),
+          border: Border.all(color: AppColors.cardBorder),
           boxShadow: [
             BoxShadow(
-                color: Colors.black.withValues(alpha: 0.03),
+                color: AppColors.shadow,
                 blurRadius: 4,
                 offset: const Offset(0, 1)),
           ],
@@ -376,9 +388,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
               child: Icon(icon, color: AppColors.primary, size: 22),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             Text(label,
-                style: const TextStyle(
+                style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w500,
                     color: AppColors.onSurface)),

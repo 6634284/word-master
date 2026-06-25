@@ -1,4 +1,4 @@
-package com.litiancheng.word_master
+package com.word.master
 
 import io.flutter.embedding.android.FlutterActivity
 

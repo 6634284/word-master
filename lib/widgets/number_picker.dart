@@ -56,10 +56,10 @@ class _NumberPickerState extends State<NumberPicker> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text(AppStrings.hint),
+        title: Text(AppStrings.hint),
         content: Text(message),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('确定')),
+          TextButton(onPressed: () => Navigator.pop(ctx), child: Text('确定')),
         ],
       ),
     );
@@ -70,29 +70,31 @@ class _NumberPickerState extends State<NumberPicker> {
     return Dialog(
       backgroundColor: Colors.transparent,
       child: Container(
-        padding: const EdgeInsets.all(24),
+        width: 340,
+        padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           color: AppColors.surfaceLowest,
           borderRadius: BorderRadius.circular(24),
         ),
-        child: Column(
+        child: SingleChildScrollView(
+          child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(widget.title,
-                style: const TextStyle(
+                style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w600,
                     color: AppColors.onSurface)),
-            const SizedBox(height: 4),
+            SizedBox(height: 4),
             Text(widget.subtitle,
-                style: const TextStyle(
+                style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
                     color: AppColors.outline)),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             Wrap(
-              spacing: 12,
-              runSpacing: 12,
+              spacing: 10,
+              runSpacing: 10,
               children: widget.options.map((count) {
                 final isActive = selected == count && customValue.isEmpty;
                 return GestureDetector(
@@ -101,8 +103,8 @@ class _NumberPickerState extends State<NumberPicker> {
                     customValue = '';
                   }),
                   child: Container(
-                    width: 80,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    width: 90,
+                    padding: const EdgeInsets.symmetric(vertical: 10),
                     decoration: BoxDecoration(
                       color: isActive ? AppColors.primary : AppColors.surfaceLowest,
                       borderRadius: BorderRadius.circular(12),
@@ -119,15 +121,15 @@ class _NumberPickerState extends State<NumberPicker> {
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
-                        color: isActive ? Colors.white : AppColors.onSurface,
+                        color: isActive ? AppColors.onPrimary : AppColors.onSurface,
                       ),
                     ),
                   ),
                 );
               }).toList(),
             ),
-            const SizedBox(height: 20),
-            const Align(
+            SizedBox(height: 20),
+            Align(
               alignment: Alignment.centerLeft,
               child: Text(AppStrings.customCount,
                   style: TextStyle(
@@ -135,7 +137,7 @@ class _NumberPickerState extends State<NumberPicker> {
                       fontWeight: FontWeight.w500,
                       color: AppColors.onSurfaceVariant)),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             TextField(
               keyboardType: TextInputType.number,
               maxLength: 4,
@@ -155,7 +157,7 @@ class _NumberPickerState extends State<NumberPicker> {
                 if (text.isNotEmpty) selected = 0;
               }),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             Row(
               children: [
                 Expanded(
@@ -167,14 +169,14 @@ class _NumberPickerState extends State<NumberPicker> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12)),
                     ),
-                    child: const Text(AppStrings.cancel,
+                    child: Text(AppStrings.cancel,
                         style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w500,
                             color: AppColors.onSurfaceVariant)),
                   ),
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 Expanded(
                   child: ElevatedButton(
                     onPressed: _handleConfirm,
@@ -186,16 +188,17 @@ class _NumberPickerState extends State<NumberPicker> {
                       elevation: 3,
                       shadowColor: AppColors.primary.withValues(alpha: 0.2),
                     ),
-                    child: const Text(AppStrings.confirm,
+                    child: Text(AppStrings.confirm,
                         style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w600,
-                            color: Colors.white)),
+                            color: AppColors.onPrimary)),
                   ),
                 ),
               ],
             ),
           ],
+        ),
         ),
       ),
     );

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 import '../models/word.dart';
 import '../models/card.dart' as app;
@@ -15,8 +16,12 @@ Future<StudySession> getTodayStudyQueue(
     Database db, String bookId, int newWordsPerDay) async {
   final now = DateTime.now().millisecondsSinceEpoch;
 
+  debugPrint('getTodayStudyQueue: bookId=$bookId, newWordsPerDay=$newWordsPerDay, now=$now');
+
   final dueCards = await queries.getDueCards(db, now, 10000);
   final newCards = await queries.getNewCards(db, bookId, newWordsPerDay);
+
+  debugPrint('getTodayStudyQueue: dueCards=${dueCards.length}, newCards=${newCards.length}');
 
   final reviewWords = <({Word word, app.Card card})>[];
   for (final card in dueCards) {
@@ -34,6 +39,7 @@ Future<StudySession> getTodayStudyQueue(
     }
   }
 
+  debugPrint('getTodayStudyQueue: reviewWords=${reviewWords.length}, newWords=${newWords.length}');
   return StudySession(newWords: newWords, reviewWords: reviewWords);
 }
 

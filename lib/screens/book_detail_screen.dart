@@ -46,13 +46,13 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('词书详情'),
+        title: Text('词书详情'),
         backgroundColor: AppColors.background,
         foregroundColor: AppColors.onSurface,
         elevation: 0,
       ),
       body: loading
-          ? const Center(
+          ? Center(
               child: Text('加载中...',
                   style: TextStyle(fontSize: 16, color: AppColors.outline)))
           : Column(
@@ -68,17 +68,17 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide:
-                            const BorderSide(color: AppColors.surfaceContainerHigh),
+                            BorderSide(color: AppColors.surfaceContainerHigh),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide:
-                            const BorderSide(color: AppColors.surfaceContainerHigh),
+                            BorderSide(color: AppColors.surfaceContainerHigh),
                       ),
                       contentPadding: const EdgeInsets.symmetric(
                           horizontal: 16, vertical: 12),
                     ),
-                    style: const TextStyle(fontSize: 16, color: AppColors.onSurface),
+                    style: TextStyle(fontSize: 16, color: AppColors.onSurface),
                     onChanged: _handleSearch,
                   ),
                 ),
@@ -90,7 +90,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                             searchQuery.isNotEmpty
                                 ? AppStrings.noMatchFound
                                 : AppStrings.noWords,
-                            style: const TextStyle(
+                            style: TextStyle(
                                 fontSize: 16, color: AppColors.outline),
                           ),
                         )
@@ -108,7 +108,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                 borderRadius: BorderRadius.circular(12),
                                 boxShadow: [
                                   BoxShadow(
-                                      color: Colors.black.withValues(alpha: 0.03),
+                                      color: AppColors.shadow,
                                       blurRadius: 2,
                                       offset: const Offset(0, 1)),
                                 ],
@@ -122,22 +122,22 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                     textBaseline: TextBaseline.alphabetic,
                                     children: [
                                       Text(word.word,
-                                          style: const TextStyle(
+                                          style: TextStyle(
                                               fontSize: 18,
                                               fontWeight: FontWeight.w600,
                                               color: AppColors.onSurface)),
                                       if (word.phonetic.isNotEmpty) ...[
-                                        const SizedBox(width: 8),
+                                        SizedBox(width: 8),
                                         Text(word.phonetic,
-                                            style: const TextStyle(
+                                            style: TextStyle(
                                                 fontSize: 14,
                                                 color: AppColors.outline)),
                                       ],
                                     ],
                                   ),
-                                  const SizedBox(height: 6),
+                                  SizedBox(height: 6),
                                   Text(word.meaning,
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                           fontSize: 15,
                                           color: AppColors.onSurfaceVariant,
                                           height: 1.5)),

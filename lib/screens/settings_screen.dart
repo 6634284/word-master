@@ -52,13 +52,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Text('考研核心词汇',
+                        Text('考研核心词汇',
                             style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w400,
                                 color: AppColors.onSurfaceVariant)),
-                        const SizedBox(width: 4),
-                        const Icon(Icons.chevron_right,
+                        SizedBox(width: 4),
+                        Icon(Icons.chevron_right,
                             size: 20, color: AppColors.outlineVariant),
                       ],
                     ),
@@ -81,13 +81,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                             borderRadius: BorderRadius.circular(999),
                           ),
                           child: Text('${settings.newWordsPerDay}个',
-                              style: const TextStyle(
+                              style: TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.w500,
                                   color: AppColors.primary)),
                         ),
-                        const SizedBox(width: 4),
-                        const Icon(Icons.chevron_right,
+                        SizedBox(width: 4),
+                        Icon(Icons.chevron_right,
                             size: 20, color: AppColors.outlineVariant),
                       ],
                     ),
@@ -98,34 +98,52 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 _sectionTitle(AppStrings.appearance),
                 _card([
                   _row(
-                    label: AppStrings.darkMode,
+                    label: '跟随系统',
                     trailing: Switch(
-                      value: settings.darkMode,
-                      onChanged: (_) =>
-                          ref.read(settingsProvider.notifier).toggleDarkMode(),
+                      value: settings.followSystem,
+                      onChanged: (value) {
+                        ref.read(settingsProvider.notifier).setFollowSystem(value);
+                      },
                       activeThumbColor: AppColors.primary,
                       inactiveTrackColor: AppColors.surfaceContainerHighest,
                     ),
                   ),
+                  if (!settings.followSystem) ...[
+                    Divider(
+                        height: 1,
+                        color: AppColors.surfaceContainerHigh,
+                        indent: 16),
+                    _row(
+                      label: AppStrings.darkMode,
+                      trailing: Switch(
+                        value: settings.darkMode,
+                        onChanged: (value) {
+                          ref.read(settingsProvider.notifier).setDarkMode(value);
+                        },
+                        activeThumbColor: AppColors.primary,
+                        inactiveTrackColor: AppColors.surfaceContainerHighest,
+                      ),
+                    ),
+                  ],
                 ]),
 
                 _sectionTitle(AppStrings.about),
                 _card([
                   _row(
                     label: AppStrings.version,
-                    trailing: const Text('1.0.0',
+                    trailing: Text('1.0.0',
                         style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w400,
                             color: AppColors.onSurfaceVariant)),
                   ),
-                  const Divider(
+                  Divider(
                       height: 1,
                       color: AppColors.surfaceContainerHigh,
                       indent: 16),
                   _row(
                     label: AppStrings.algorithm,
-                    trailing: const Text(AppStrings.fsrsVersion,
+                    trailing: Text(AppStrings.fsrsVersion,
                         style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w400,
@@ -144,7 +162,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 24, 24, 8),
       child: Text(title,
-          style: const TextStyle(
+          style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w500,
               color: AppColors.outline,
@@ -184,7 +202,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(label,
-                style: const TextStyle(
+                style: TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.w400,
                     color: AppColors.onSurface)),

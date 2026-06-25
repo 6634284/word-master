@@ -21,6 +21,7 @@ double _meanReversion(double param, double value) {
 
 double _stabilityAfterSuccess(
     double stability, double difficulty, int elapsedDays, int rating) {
+  if (stability <= 0) return _w[0] + _w[1] * difficulty;
   double hardPenalty = rating == 2 ? _w[15] : 1.0;
   double easyBonus = rating == 4 ? _w[16] : 1.0;
   return stability *
@@ -42,8 +43,10 @@ double _stabilityAfterFailure(double stability, double difficulty) {
 }
 
 int _nextInterval(double stability) {
+  if (stability.isNaN || stability.isInfinite || stability <= 0) return 1;
   final interval =
       (stability / 1.0) * (pow(_requestRetention, 1.0 / _w[17]) - 1);
+  if (interval.isNaN || interval.isInfinite) return 1;
   return max(1, min(interval.round(), _maximumInterval.round()));
 }
 
@@ -227,7 +230,9 @@ List<ButtonPreview> getButtonPreviews(app.Card card) {
     final dueTime = result.due.millisecondsSinceEpoch;
     final nowTime = now.millisecondsSinceEpoch;
     final intervalMs = dueTime - nowTime;
-    final intervalDays = max(1, (intervalMs / (1000 * 60 * 60 * 24)).ceil());
+    final intervalDays = intervalMs > 0
+        ? max(1, (intervalMs / (1000 * 60 * 60 * 24)).ceil())
+        : 1;
     return ButtonPreview(
       rating: r.$1,
       label: r.$3,

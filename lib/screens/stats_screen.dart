@@ -39,7 +39,7 @@ class _StatsScreenState extends ConsumerState<StatsScreen> {
   @override
   Widget build(BuildContext context) {
     if (loading || stats == null) {
-      return const Scaffold(
+      return Scaffold(
         backgroundColor: AppColors.background,
         body: Column(
           children: [
@@ -99,26 +99,26 @@ class _StatsScreenState extends ConsumerState<StatsScreen> {
                   decoration: BoxDecoration(
                     color: AppColors.streakBg,
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: const Color(0x33C1C7D2)),
+                    border: Border.all(color: AppColors.cardBorderStrong),
                   ),
                   child: Column(
                     children: [
-                      const Text(AppStrings.streakLabel,
+                      Text(AppStrings.streakLabel,
                           style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
-                              color: Color(0xFF4E472B),
+                              color: AppColors.streakLabelText,
                               letterSpacing: 0.05)),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text('$currentStreak',
-                              style: const TextStyle(
+                              style: TextStyle(
                                   fontSize: 48,
                                   fontWeight: FontWeight.w700,
                                   color: AppColors.streakText)),
-                          const Padding(
+                          Padding(
                             padding: EdgeInsets.only(bottom: 8),
                             child: Text('天',
                                 style: TextStyle(
@@ -131,7 +131,7 @@ class _StatsScreenState extends ConsumerState<StatsScreen> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
 
                 // Word Distribution
                 Container(
@@ -139,7 +139,7 @@ class _StatsScreenState extends ConsumerState<StatsScreen> {
                   decoration: BoxDecoration(
                     color: AppColors.surfaceLowest,
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: const Color(0x1AC1C7D2)),
+                    border: Border.all(color: AppColors.cardBorder),
                     boxShadow: [
                       BoxShadow(
                           color: AppColors.primary.withValues(alpha: 0.04),
@@ -150,12 +150,12 @@ class _StatsScreenState extends ConsumerState<StatsScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(AppStrings.mastered,
+                      Text(AppStrings.mastered,
                           style: TextStyle(
                               fontSize: 17,
                               fontWeight: FontWeight.w600,
                               color: AppColors.onSurface)),
-                      const SizedBox(height: 20),
+                      SizedBox(height: 20),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
@@ -167,7 +167,7 @@ class _StatsScreenState extends ConsumerState<StatsScreen> {
                               AppColors.primary, AppStrings.learned, s.reviewCount),
                         ],
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: 16),
                       ClipRRect(
                         borderRadius: BorderRadius.circular(4),
                         child: SizedBox(
@@ -196,7 +196,7 @@ class _StatsScreenState extends ConsumerState<StatsScreen> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
 
                 // 7-Day Chart
                 Container(
@@ -204,7 +204,7 @@ class _StatsScreenState extends ConsumerState<StatsScreen> {
                   decoration: BoxDecoration(
                     color: AppColors.surfaceLowest,
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: const Color(0x1AC1C7D2)),
+                    border: Border.all(color: AppColors.cardBorder),
                     boxShadow: [
                       BoxShadow(
                           color: AppColors.primary.withValues(alpha: 0.04),
@@ -215,12 +215,12 @@ class _StatsScreenState extends ConsumerState<StatsScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(AppStrings.recent7Days,
+                      Text(AppStrings.recent7Days,
                           style: TextStyle(
                               fontSize: 17,
                               fontWeight: FontWeight.w600,
                               color: AppColors.onSurface)),
-                      const SizedBox(height: 20),
+                      SizedBox(height: 20),
                       SizedBox(
                         height: 120,
                         child: Row(
@@ -245,9 +245,9 @@ class _StatsScreenState extends ConsumerState<StatsScreen> {
                                       constraints:
                                           const BoxConstraints(minHeight: 4),
                                     ),
-                                    const SizedBox(height: 8),
+                                    SizedBox(height: 8),
                                     Text(day.date,
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                             fontSize: 11,
                                             fontWeight: FontWeight.w500,
                                             color: AppColors.outline)),
@@ -261,18 +261,18 @@ class _StatsScreenState extends ConsumerState<StatsScreen> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
 
                 // Summary Cards
                 Row(
                   children: [
                     Expanded(
                         child: _buildSummaryCard('$totalNew', AppStrings.totalNewWords)),
-                    const SizedBox(width: 10),
+                    SizedBox(width: 10),
                     Expanded(
                         child:
                             _buildSummaryCard('$totalReview', AppStrings.totalReviewWords)),
-                    const SizedBox(width: 10),
+                    SizedBox(width: 10),
                     Expanded(
                         child:
                             _buildSummaryCard('$totalMinutes', AppStrings.studyMinutes)),
@@ -294,15 +294,15 @@ class _StatsScreenState extends ConsumerState<StatsScreen> {
           height: 10,
           decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
-        const SizedBox(height: 6),
+        SizedBox(height: 6),
         Text(label,
-            style: const TextStyle(
+            style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
                 color: AppColors.onSurfaceVariant)),
-        const SizedBox(height: 4),
+        SizedBox(height: 4),
         Text('$count',
-            style: const TextStyle(
+            style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.w700,
                 color: AppColors.onSurface)),
@@ -316,7 +316,7 @@ class _StatsScreenState extends ConsumerState<StatsScreen> {
       decoration: BoxDecoration(
         color: AppColors.surfaceLowest,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0x1AC1C7D2)),
+        border: Border.all(color: AppColors.cardBorder),
         boxShadow: [
           BoxShadow(
               color: AppColors.primary.withValues(alpha: 0.04),
@@ -327,13 +327,13 @@ class _StatsScreenState extends ConsumerState<StatsScreen> {
       child: Column(
         children: [
           Text(number,
-              style: const TextStyle(
+              style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w700,
                   color: AppColors.primary)),
-          const SizedBox(height: 4),
+          SizedBox(height: 4),
           Text(label,
-              style: const TextStyle(
+              style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
                   color: AppColors.onSurfaceVariant)),

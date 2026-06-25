@@ -17,7 +17,6 @@ class DatabaseHelper {
       version: 1,
       onCreate: _onCreate,
       onConfigure: (db) async {
-        await db.execute('PRAGMA journal_mode = WAL');
         await db.execute('PRAGMA foreign_keys = ON');
       },
     );

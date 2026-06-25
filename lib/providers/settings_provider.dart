@@ -5,38 +5,31 @@ class SettingsState {
   final String selectedBookId;
   final int newWordsPerDay;
   final bool darkMode;
+  final bool followSystem;
 
   SettingsState({
     this.selectedBookId = 'hongbaoshu_kaoyan',
     this.newWordsPerDay = 30,
     this.darkMode = false,
+    this.followSystem = true,
   });
 
   SettingsState copyWith({
     String? selectedBookId,
     int? newWordsPerDay,
     bool? darkMode,
+    bool? followSystem,
   }) =>
       SettingsState(
         selectedBookId: selectedBookId ?? this.selectedBookId,
         newWordsPerDay: newWordsPerDay ?? this.newWordsPerDay,
         darkMode: darkMode ?? this.darkMode,
+        followSystem: followSystem ?? this.followSystem,
       );
 }
 
 class SettingsNotifier extends StateNotifier<SettingsState> {
-  SettingsNotifier() : super(SettingsState()) {
-    _load();
-  }
-
-  Future<void> _load() async {
-    final prefs = await SharedPreferences.getInstance();
-    state = SettingsState(
-      selectedBookId: prefs.getString('selectedBookId') ?? 'hongbaoshu_kaoyan',
-      newWordsPerDay: prefs.getInt('newWordsPerDay') ?? 30,
-      darkMode: prefs.getBool('darkMode') ?? false,
-    );
-  }
+  SettingsNotifier(SettingsState initial) : super(initial);
 
   Future<void> setSelectedBookId(String id) async {
     state = state.copyWith(selectedBookId: id);
@@ -50,14 +43,22 @@ class SettingsNotifier extends StateNotifier<SettingsState> {
     await prefs.setInt('newWordsPerDay', count);
   }
 
-  Future<void> toggleDarkMode() async {
-    state = state.copyWith(darkMode: !state.darkMode);
+  Future<void> setDarkMode(bool value) async {
+    state = state.copyWith(darkMode: value);
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('darkMode', state.darkMode);
+    await prefs.setBool('darkMode', value);
+  }
+
+  Future<void> setFollowSystem(bool value) async {
+    state = state.copyWith(followSystem: value);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('followSystem', value);
   }
 }
 
 final settingsProvider =
     StateNotifierProvider<SettingsNotifier, SettingsState>((ref) {
-  return SettingsNotifier();
+  // Initial state is passed from main.dart via the ProviderScope
+  // This is a fallback in case it's not provided
+  return SettingsNotifier(SettingsState());
 });
